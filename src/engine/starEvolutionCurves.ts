@@ -90,6 +90,12 @@ function R_from_LT(L: number, T: number): number {
   return Math.sqrt(L) / (x * x)
 }
 
+// Small CNO → luminosity boost helper.
+// f in [0,1]  ⇒ multiplier in [1.0, 1.15]
+function cnoBoost(f: number): number {
+  return 1 + 0.15 * f
+}
+
 // ---------- KEYPOINT CONSTRUCTION ----------
 // For each big phase, we define a start and end state (L, R, T).
 // Within a phase we linearly interpolate between them.
@@ -109,6 +115,11 @@ function buildPhaseShapes(
   const T0 = initial.T_eff
   const logL_ms = initial.logL
 
+  // Apply a small CNO luminosity boost everywhere
+  const cno = cnoBoost(fCNO)
+  const L0_cno = L0 * cno
+  const logL_ms_cno = logL_ms + Math.log10(cno)
+
   // Simple metallicity factor: high Z → a bit cooler, low Z → hotter
   const Zsun = 0.02
   const Zrel = Zsun > 0 ? clamp(Z / Zsun, 0.1, 3.0) : 1.0
@@ -119,12 +130,12 @@ function buildPhaseShapes(
   const msRadiusGrowth = clamp(0.15 * Math.pow(1 / M, 0.2), 0.03, 0.2)
 
   const msStart: StatePoint = {
-    L: L0,
+    L: L0_cno,                       // brighter if CNO is high
     R: R0,
-    T_eff: T0,
+    T_eff: T0 * Math.sqrt(cno),      // slightly hotter with CNO
   }
 
-  const L_msEnd = L0 * (1 + msBrightening)
+  const L_msEnd = L0_cno * (1 + msBrightening)
   const R_msEnd = R0 * (1 + msRadiusGrowth)
   const T_msEnd = T_from_LR(L_msEnd, R_msEnd) * Math.pow(Zrel, -0.03)
 
@@ -157,7 +168,7 @@ function buildPhaseShapes(
   const logL_rgbRaw = 4 + 1.3 * Math.log10(M)
   const logL_rgbTip = clamp(
     logL_rgbRaw,
-    logL_ms + 0.8, // at least ~6× brighter than MS
+    logL_ms_cno + 0.8, // at least ~6× brighter than boosted MS
     5.8, // cap so even massive stars stay in a sane supergiant range
   )
   const L_rgbTip = Math.pow(10, logL_rgbTip)
@@ -215,8 +226,8 @@ function buildPhaseShapes(
   if (isCoreCollapse) {
     // Base "pre-SN" luminosity: at least as bright as AGB tip,
     // and never below logL ~ 4.5
-    const logL_agb = Math.log10(L_agb)
-    const logL_core = Math.max(logL_agb, 4.5)
+    const logL_agb_val = Math.log10(L_agb)
+    const logL_core = Math.max(logL_agb_val, 4.5)
     const L_core = Math.pow(10, logL_core)
 
     if (remnant === "ns") {
@@ -260,8 +271,8 @@ function buildPhaseShapes(
       }
     } else {
       // Black-hole progenitors: hotter WR / LBV-like endpoint.
-      const logL_core = Math.max(Math.log10(L_agb), 4.5)
-      const logL_wr = clamp(logL_core + 0.3, 5.2, 6.2)
+      const logL_core_val = Math.max(Math.log10(L_agb), 4.5)
+      const logL_wr = clamp(logL_core_val + 0.3, 5.2, 6.2)
       const L_wr = Math.pow(10, logL_wr)
       const T_wr = clamp(
         50000 * Math.pow(M / 25, 0.15),
@@ -309,10 +320,10 @@ function buildPhaseShapes(
   // --- 6b) WHITE DWARF COOLING (low/intermediate-mass only) ---
   const R_wd = 0.015 * Math.pow(M, -0.2) // very weak mass trend
 
-  const L_wdStart = L0 * clamp(0.08 * Math.pow(M, 0.7), 0.02, 0.3)
+  const L_wdStart = L0_cno * clamp(0.08 * Math.pow(M, 0.7), 0.02, 0.3)
   const T_wdStart = 25000 * Math.pow(M, 0.05)
 
-  const L_wdEnd = L0 * clamp(2e-4 * Math.pow(M, 0.3), 5e-5, 5e-4)
+  const L_wdEnd = L0_cno * clamp(2e-4 * Math.pow(M, 0.3), 5e-5, 5e-4)
   const T_wdEnd = 4500 * Math.pow(Zrel, -0.05)
 
   const wdStart: StatePoint = {

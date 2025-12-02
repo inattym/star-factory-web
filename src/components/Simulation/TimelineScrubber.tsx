@@ -1,5 +1,4 @@
 // src/components/Simulation/TimelineScrubber.tsx
-import React from "react"
 import type { EvolutionTimeline } from "../../engine/starEvolutionEngine"
 
 type TimelineScrubberProps = {

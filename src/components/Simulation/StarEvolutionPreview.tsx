@@ -1,4 +1,3 @@
-import React from "react"
 import { StarPreview } from "../StarPreview"
 
 type StarEvolutionPreviewProps = {
