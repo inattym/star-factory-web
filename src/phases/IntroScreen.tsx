@@ -19,11 +19,6 @@ export function IntroScreen({
         Massive, metal-poor, CNO-rich? Tiny, metal-rich, long-lived? Your
         choices set the brightness, color, lifetime, and final fate.
       </p>
-
-      <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
-        <button onClick={onStartTutorial}>Start Tutorial</button>
-        <button onClick={onSkipToBuild}>Skip to Building</button>
-      </div>
     </section>
   )
 }
