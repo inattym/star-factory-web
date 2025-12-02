@@ -1,0 +1,860 @@
+/*    ROOT LAYOUT    */
+
+:root {
+  --tab-width: 130px;
+  --tab-gap: 12px;
+}
+
+/* ========== HR DIAGRAM THEME (DARK + LIGHT IN ONE PLACE) ========== */
+
+/* Dark-mode defaults for the diagram */
+:root {
+  --hr-grid: #545555;
+  --hr-axis-text: #d0d1d5;
+  --hr-main-seq: #0f61b8;
+  --hr-track: #ffcf5b;
+  --hr-current-ring: #ffd56b;
+  --hr-current-fill: #ffffff;
+  --hr-legend-text: #b7bac6;
+}
+
+.hr-diagram-wrapper {
+  width: 500px;
+  height: 300px;
+
+  /* Add space ABOVE and BELOW the diagram
+     without stretching the diagram */
+  padding-top: 10px;      /* increase this to push diagram DOWN */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  margin: 1rem 0;
+
+  border-radius: 25px;
+
+  /* frosted bubble style like nav bar – DARK MODE baseline */
+  background: rgba(30, 30, 31, 0.82);
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.75),
+    0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 1px 2px rgba(255,255,255,0.06);
+}
+
+
+/* Star summary bubble – same style family as HR card, just smaller */
+
+.summary-title {
+  margin: 0 0 2.0rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--hr-axis-text);
+}
+
+
+
+.star-summary-card {
+  min-width: 220px;
+  max-width: 260px;
+  min-height: 265px;        /* tweak this number */
+
+  padding: 1.1rem 1.4rem;
+  border-radius: 18px;
+
+  background: rgba(30, 30, 31, 0.82);
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 22px 44px rgba(0,0,0,0.75),
+    0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 1px 2px rgba(255,255,255,0.06);
+}
+
+/* Slider cards – floating windows for each control stair */
+.slider-card {
+  width: 320px;          /* ← adjust length */
+
+  height: 55px;         /* ← THIS controls the card height */
+  padding: 0.9rem 1.4rem;
+  margin-left: 5rem;   /* move all slider windows LEFT */
+
+  border-radius: 20px;
+  margin-bottom: 1.4rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* center label + bars vertically */
+
+
+
+  background: rgba(30, 30, 31, 0.82);
+  backdrop-filter: blur(18px);
+
+  background: rgba(30, 30, 31, 0.82);
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 22px 44px rgba(0,0,0,0.75),
+    0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 1px 2px rgba(255,255,255,0.06);
+}
+
+.slider-card label {
+  padding-left: 0.2rem;
+
+  /* nudge label down inside the slider bubble without changing bubble size */
+  position: relative;
+  top: 15px;      /* increase to push text further DOWN, decrease to move UP */
+  font-weight: 700;      /* ← MAKE THE TITLES BOLD */
+
+}
+
+/* Light mode version to match HR card */
+@media (prefers-color-scheme: light) {
+  .star-summary-card,
+  .slider-card {
+    background: rgba(234, 234, 234, 0.78);
+    box-shadow:
+      0 18px 36px rgba(0,0,0,0.25),
+      0 0 0 1px rgba(0,0,0,0.05),
+      inset 0 2px 4px rgba(255,255,255,0.7);
+  }
+}
+
+
+
+/* optional: placeholder for Intro/Tutorial screens, re-uses same palette */
+.hr-diagram-placeholder {
+  width: 100%;
+  height: 220px;
+  margin: 1rem 0;
+  border-radius: 8px;
+  background: var(--hr-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Light-mode overrides for HR diagram (vars + card) */
+@media (prefers-color-scheme: light) {
+  :root {
+    --hr-grid: #c6c6c6;
+    --hr-axis-text: #636466;
+    --hr-main-seq: #2f6bff;
+    --hr-track: #f6a63b;
+    --hr-current-ring: #f6d67a;
+    --hr-current-fill: #ffffff;
+    --hr-legend-text: #636466;
+  }
+
+  .hr-diagram-wrapper {
+    background: rgba(234, 234, 234, 0.78);
+    backdrop-filter: blur(18px);
+
+    box-shadow:
+      0 22px 44px rgba(0,0,0,0.35),
+      0 0 0 1px rgba(0,0,0,0.06),
+      inset 0 2px 4px rgba(255,255,255,0.7);
+  }
+}
+
+/* ================== REST OF APP ================== */
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem 2rem;
+  text-align: center;
+}
+
+/*   PANEL + SCREEN LAYOUT (GLOBAL)   */
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 0 0.5rem;
+  background: transparent;
+}
+
+
+/*   NAV BAR: BASE LAYOUT (SHARED)  */
+
+.phase-tabs {
+  max-width: 675px;           /* adjust nav bar LENGTH */
+  margin: 0 auto;             /* center the shorter nav bar */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: var(--tab-gap);
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+}
+
+.nav-capsule {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: var(--capsule-width, var(--tab-width));
+  height: calc(100% - 12px);
+  border-radius: 999px;
+
+  /* motion */
+  transform: translateX(var(--capsule-x, 4px));
+  transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+  pointer-events: none;
+}
+
+.phase-tabs:has(.tab:active) .nav-capsule {
+  transform:
+    translateX(var(--capsule-x, 4px))
+    scaleX(1.03)
+    scaleY(0.97);
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+
+  /* keep tab width exactly equal to the capsule width */
+  width: var(--tab-width);
+  flex: 0 0 var(--tab-width);
+
+  padding: 0.55rem 0;          /* vertical only */
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  text-align: center;          /* center the label inside */
+}
+
+.tab:active {
+  transform: scale(0.96, 0.94);
+}
+
+.tab:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.7);
+  outline-offset: 3px;
+}
+
+
+/*  NAV BAR: DARK THEME (DEFAULT) */
+
+.phase-tabs {
+  /*  NAV BAR BACKGROUND COLOR (DARK MODE) */
+  background: #1e1e1f;
+
+  /*  NAV BAR SHADOW (DARK MODE) */
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.nav-capsule {
+  /*  CAPSULE BACKGROUND COLOR (DARK MODE) */
+  background: #3b3b3b;
+
+  /*  CAPSULE SHADOW / INNER BORDER (DARK MODE) */
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.45),
+    0 0 0 1px rgba(71, 71, 71, 0.7) inset;
+}
+
+.tab {
+  /*  TAB TEXT COLOR (DARK MODE, INACTIVE) */
+  color: #5b5b5b;
+}
+
+.tab.active {
+  /*  TAB TEXT COLOR WHEN ACTIVE (DARK MODE) */
+  color: #d5d5d5;
+  text-shadow: none;
+}
+
+
+/*    NAV BAR: LIGHT THEME   */
+
+@media (prefers-color-scheme: light) {
+  .phase-tabs {
+    /*  NAV BAR BACKGROUND COLOR (LIGHT MODE) */
+    background: rgba(239, 239, 239, 0.96);
+
+    /*  NAV BAR SHADOW (LIGHT MODE) */
+    box-shadow:
+      0 16px 32px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  .nav-capsule {
+    /*  CAPSULE BACKGROUND COLOR (LIGHT MODE) */
+    background: #e3e3e3;
+
+    /*  CAPSULE SHADOW / INNER BORDER (LIGHT MODE) */
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.45),
+      0 0 0 1px rgba(0,0,0,0.08) inset;
+  }
+
+  .tab {
+    /*  TAB TEXT COLOR (LIGHT MODE, INACTIVE) */
+    color: #9c9c9c;
+  }
+
+  .tab.active {
+    /*  TAB TEXT COLOR WHEN ACTIVE (LIGHT MODE) */
+    color: #000000;
+    text-shadow: none;
+  }
+}
+
+
+/*  MAIN CONTENT / PANELS / LAYOUT */
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-top: 3.5rem;
+}
+
+/* PANELS */
+
+.panel {
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+
+.panel-left,
+.panel-right {
+  padding: 1rem;
+}
+
+
+/* ========== BUILD SCREEN LAYOUT + COLUMN POSITIONS ========= */
+
+.build-layout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2rem;
+}
+
+/* LEFT COLUMN: star preview column position */
+.panel-left {
+  width: 340px;
+  max-width: 340px;
+
+  /* LEFT / RIGHT knob for the whole star-preview column */
+  margin-left: -150px; /* more negative = move left, positive = move right */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* RIGHT COLUMN: stack for all build cards */
+.panel-right {
+  min-width: 0;
+  display: flex;          /* stack the three cards */
+  flex-direction: column;
+  align-items: flex-start; /* default: cards hug the left */
+}
+
+
+/* ========== STAR PREVIEW (position + animation) ========= */
+
+/* Star preview position INSIDE the left column */
+.star-preview-wrapper {
+  width: 320px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* UP / DOWN for the preview circle */
+  margin: 0 auto;
+  margin-top: 10rem;   /* bigger = lower, smaller/negative = higher */
+}
+
+.star-preview {
+  animation: star-pulse var(--pulse-duration, 3s) ease-in-out infinite;
+  transition:
+    box-shadow 0.4s ease,
+    background 0.4s ease,
+    transform 0.3s ease;
+}
+
+@keyframes star-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+
+/* ========== BUILD CARDS (right column panels) ========= */
+
+.build-card {
+  text-align: left;
+  margin-bottom: 2rem;
+  max-width: 520px;      /* stop any card from stretching the whole column */
+}
+
+/* Star Ingredients (3 sliders + button) */
+.build-card-controls {
+  /* UP / DOWN for the whole Ingredients card */
+  margin-top: 4rem;      /* + = lower, - = higher */
+
+  /* LEFT / RIGHT: relative to .panel-right */
+  align-self: flex-start;/* keep it on the left */
+}
+
+/* Current Star Summary */
+.build-card-summary {
+  /* UP / DOWN relative to Ingredients */
+  margin-top: -22rem;
+
+  /* LEFT / RIGHT snapping in the right column */
+  align-self: flex-end;  /* snap it to the right side of the column */
+
+  /* prevent summary width from stretching sliders */
+  max-width: 260px;
+
+  /* fine LEFT / RIGHT nudges */
+  margin-right: -16rem;    /* tweak this to move it a bit left/right */
+}
+
+
+/* HR Diagram */
+.build-card-hr {
+  /* UP / DOWN under the cards above */
+  margin-top: 0rem;      /* space below whatever is above it */
+
+  /* LEFT / RIGHT alignment under right column */
+  align-self: flex-start;/* keep diagram left-aligned under everything */
+
+  /* Visual nudge without affecting grid layout */
+  transform: translateX(5rem);  /* + = move right, - = move left */
+
+}
+
+
+/* ========== RESPONSIVE LAYOUT ========= */
+
+@media (max-width: 900px) {
+  .build-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-left,
+  .panel-right {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .star-preview-wrapper {
+    width: 260px;
+    height: 260px;
+  }
+}
+
+
+/* ========== CONTROLS (labels + range sliders) ========= */
+
+.control-group {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.control-group input[type='range'] {
+  width: 60%;
+  height: 6px;
+  accent-color: #6180dd;
+}
+
+
+/* ===== MASS STAIR / EQUALIZER CONTROL ===== */
+
+.mass-stair {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  width: 100%;           /* match other controls visually */
+  height: 35px;
+  margin-top: 0.6rem;
+  cursor: pointer;
+}
+
+.mass-stair-bar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  background: #d0d0d0;
+  transition:
+    height 0.18s ease-out,
+    background-color 0.18s ease-out;
+}
+
+.launch-button {
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  background: #3a3af5;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.launch-button:hover {
+  background: #5757ff;
+}
+
+.summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.summary-list li {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+
+
+
+/* === Swipe to Activate Control (VERTICAL) === */
+
+.swipe-track {
+  width: 80px;          /* narrow, tall pill */
+  height: 305px;        /* swipe distance */
+  border-radius: 999px;
+
+  background: rgba(144, 0, 0, 0.82);
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 2px 4px rgba(255,255,255,0.06);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  margin-top: -4rem;
+  margin-left: 130rem;
+
+  user-select: none;
+
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Completed (green) state */
+.swipe-track.swipe-complete {
+  background: #2e7d32;
+  box-shadow:
+    0 18px 36px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+/* draggable circle */
+.swipe-thumb {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #c8c8c8;
+  color: #000000;
+  font-size: 1.4rem;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  transform: translate(-50%, 0);
+
+  cursor: grab;
+  user-select: none;
+
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+
+  z-index: 2; /* <<< added */
+}
+
+/* === VERTICAL, INSIDE TRACK, ROTATED LABEL === */
+
+.swipe-label,
+.swipe-label-complete {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, 90%) rotate(-90deg);
+
+  color: #e17171;
+  font-size: 0.95rem;
+  font-weight: 500;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+
+  z-index: 1; /* <<< added */
+}
+
+.swipe-label-complete {
+  color: #45c645;
+  font-weight: 600;
+
+  /* smaller Y-translate = move text UP */
+  transform: translate(-50%, -100%) rotate(-90deg);
+}
+
+@media (prefers-color-scheme: light) {
+  /* SLIDER LIGHT-MODE OVERRIDES */
+  .swipe-track {
+    background: rgba(192, 0, 0, 0.95);
+    box-shadow:
+      0 16px 32px rgba(0,0,0,0.65),
+      0 0 0 1px rgba(0,0,0,0.06),
+      inset 0 2px 4px rgba(255,255,255,0.9);
+  }
+
+  .swipe-track.swipe-complete {
+    background: #3da85b;
+  }
+
+  .swipe-thumb {
+    background: #ffffff;
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.25),
+      0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  /* inactive label in light mode */
+  .swipe-label {
+    color: #ffc8c8;
+  }
+
+  /* keep activated label green in light mode too */
+  .swipe-label-complete {
+    color: #83e983;
+  }
+}
+
+
+
+/* Ground shadow under the star */
+.star-ground-shadow {
+  animation: shadow-pulse var(--pulse-duration, 3s) ease-in-out infinite;
+  transform-origin: center center;
+
+  /* start from the offset coming from StarPreview.tsx */
+  transform: translateY(var(--shadow-offset, 0)) scale(1);
+}
+
+/* Use the SAME timing curve as star-pulse, but keep the vertical offset */
+@keyframes shadow-pulse {
+  0%, 100% {
+    transform: translateY(var(--shadow-offset, 0)) scale(1);
+  }
+  50% {
+    transform: translateY(var(--shadow-offset, 0)) scale(1.04);
+  }
+}
+
+/* === SIMULATION TIMELINE SCRUBBER =================== */
+
+.timeline-scrubber {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 0.5rem;
+}
+
+.timeline-bar {
+  display: flex;
+  width: 100%;
+  height: 18px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 18px 30px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+}
+
+.timeline-segment {
+  position: relative;
+  flex: 0 0 auto;
+  border-right: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.timeline-segment:last-child {
+  border-right: none;
+}
+
+.timeline-segment-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ffcf5b, #ff8a5b);
+  transition: width 0.07s linear;
+}
+
+.timeline-segment.is-active .timeline-segment-fill {
+  box-shadow: 0 0 12px rgba(255, 207, 91, 0.8);
+}
+
+.timeline-segment-label {
+  position: absolute;
+  top: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  white-space: nowrap;
+  color: #c9cad1;
+}
+
+.timeline-caption {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #b3b5c2;
+}
+
+/* Light mode tweaks */
+@media (prefers-color-scheme: light) {
+  .timeline-bar {
+    background: rgba(0, 0, 0, 0.04);
+    box-shadow:
+      0 14px 26px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  }
+
+  .timeline-segment-label {
+    color: #555;
+  }
+
+  .timeline-caption {
+    color: #555;
+  }
+}
+
+
+
+
+
+/* === SIMULATION CONTROL PANEL – STEP 1: BIG PILL CONTAINER === */
+
+/* wrapper row that holds the panel */
+.simulation-runner-controls {
+  width: 50%;              /* span page width */
+  display: flex;
+  justify-content: center;  /* center the pill horizontally */
+  margin-top: 32px;         /* distance from star preview */
+  margin-bottom: 48px;      /* distance from bottom of page */
+}
+
+/* the big rounded pill itself */
+.timeline-panel {
+  width: 760px;             /* panel width in px */
+  height: 170px;            /* panel height in px */
+  border-radius: 999px;     /* super rounded corners */
+  padding: 24px 32px;       /* inner breathing room */
+
+  background: rgba(15, 23, 42, 0.96);  /* dark navy */
+  box-shadow:
+    0 26px 60px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+}
+
+/* light-mode version of the pill */
+@media (prefers-color-scheme: light) {
+  .timeline-panel {
+    background: rgba(238, 238, 238, 0.95);
+    box-shadow:
+      0 20px 40px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(0, 0, 0, 0.06);
+  }
+}
+
+
+
+
+.simulation-hr-tilt {
+  perspective: 1400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* NEW knobs — move the whole HR diagram */
+  margin-top: -30rem;          /* ↑↓ move up/down */
+  transform: translateX(30rem); /* ←→ move left/right */
+}
+
+/* inner HR card */
+.simulation-hr-tilt > * {
+  transform-origin: center center;
+
+  /* rotateY gives the left→right 3D twist */
+  transform: rotateY(-35deg) translateX(-12px);
+
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+
+  box-shadow:
+    -30px 25px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+/* optional hover */
+.simulation-hr-tilt > *:hover {
+  transform: rotateY(14deg) translateX(-6px);
+}
+
+
+
+/* === SIMULATION HR ROW (SIM SCREEN) === */
+
+/* row that holds only the HR diagram on the sim screen */
+.simulation-panels-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
