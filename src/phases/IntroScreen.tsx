@@ -9,7 +9,7 @@ export function IntroScreen({
 }: IntroScreenProps) {
   return (
     <section className="panel panel-intro">
-      <h2>Welcome to the Star Factory</h2>
+      <h2>Welcome to the Star Factory by NateC & NathanM</h2>
       <p>
         You&apos;re running a stellar assembly line. Your job: choose the mass,
         metallicity (Z), and CNO content of newborn stars and see how their
