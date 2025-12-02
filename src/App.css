@@ -851,6 +851,7 @@
 /* === SIMULATION HR ROW (SIM SCREEN) === */
 
 /* row that holds only the HR diagram on the sim screen */
+
 .simulation-panels-row {
   width: 100%;
   display: flex;
@@ -858,3 +859,21 @@
   align-items: flex-start;
   margin-top: 2rem;
 }
+
+/* === SIMULATION LIFETIME LABEL (SIM SCREEN) === */
+
+.simulation-lifetime {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: #b3b5c2;
+}
+
+@media (prefers-color-scheme: light) {
+  .simulation-lifetime {
+    color: #555;
+  }
+}
+
+
+
+

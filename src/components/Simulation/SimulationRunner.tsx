@@ -148,6 +148,21 @@ export function SimulationRunner({
   // 1) build timeline whenever the star parameters change
   const timeline = useMemo(() => computeEvolutionTimeline(params), [params])
 
+  // formatted total lifetime string
+  const totalLifetimeLabel = useMemo(() => {
+    const tMyr = timeline.totalLifetimeMyr
+    if (!Number.isFinite(tMyr) || tMyr <= 0) return "—"
+
+    // if older than 1000 Myr, show in billions of years
+    if (tMyr >= 1000) {
+      const tGyr = tMyr / 1000
+      return `${tGyr.toFixed(2)} billion years`
+    }
+
+    // otherwise in millions of years
+    return `${tMyr.toFixed(1)} million years`
+  }, [timeline.totalLifetimeMyr])
+
   // 2) simulation state
   const [timeMyr, setTimeMyr] = useState(0)
   const [hasStarted, setHasStarted] = useState(false)
@@ -166,7 +181,7 @@ export function SimulationRunner({
     setTrackPoints([])
   }, [timeline.totalLifetimeMyr])
 
-  // 🔧 2.5) compute a size scale so that at t=0 the sim size
+  // 2.5) compute a size scale so that at t=0 the sim size
   // matches the build-screen initialSizePx
   const sizeScale = useMemo(() => {
     const state0 = getStarStateAtTime(params, timeline, 0)
@@ -405,9 +420,12 @@ export function SimulationRunner({
         )}
 
         {hasFinished && (
-          <div className="simulation-finished">
-            Evolution complete
-          </div>
+          <>
+            <div className="simulation-finished">Evolution complete</div>
+            <div className="simulation-lifetime">
+              Total lifetime: {totalLifetimeLabel}
+            </div>
+          </>
         )}
       </div>
 
@@ -427,3 +445,4 @@ export function SimulationRunner({
     </div>
   )
 }
+
