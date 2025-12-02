@@ -31,7 +31,7 @@ export function IntroScreen({
 
       <p style={{ fontSize: "0.85rem", opacity: 0.7, marginTop: "1rem" }}>
         This project was created as a final assignment for the University of
-        Utah ASTRO 3070 course.
+        Utah fall 2025 ASTRO 3070 course.
       </p>
     </section>
   )
