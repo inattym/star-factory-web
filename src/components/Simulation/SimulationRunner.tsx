@@ -1,5 +1,5 @@
 // src/components/Simulation/SimulationRunner.tsx
-import React, { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import type { StarParams } from "../../engine/starEngine"
 import { computeEvolutionTimeline } from "../../engine/starEvolutionEngine"
 import { getStarStateAtTime } from "../../engine/starEvolutionCurves"

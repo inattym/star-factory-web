@@ -1,5 +1,4 @@
 // src/phases/SimulationScreen.tsx
-import React from "react"
 import type { StarParams } from "../engine/starEngine"
 import { SimulationRunner } from "../components/Simulation/SimulationRunner"
 
